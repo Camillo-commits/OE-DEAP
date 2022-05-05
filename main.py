@@ -1,8 +1,9 @@
-from random import randint, random
 
 from deap import base
 from deap import creator
 from deap import tools
+from numpy import random
+from numpy.random import randint
 
 
 def individual(icls):
@@ -13,7 +14,6 @@ def individual(icls):
 
 
 def fitnessFunction(individual):
-    # tutaj rozkoduj binarnego osobnika! Napisz funkcje decodeInd
     ind = decodeInd(individual)
     result = ((ind[0] + 2 * ind[1] - 7) ** 2 + (2 * ind[0] + ind[1] - 5) ** 2,)
     return result
@@ -27,7 +27,7 @@ def decodeInd(individual):
     return ind
 
 
-def main_binary(is_min, selector, crosser, size_population, probability_mutation, probability_crossover,
+def main_binary(is_min, selector, crosser, mutator, size_population, probability_mutation, probability_crossover,
                 number_iteration, number_elitism):
     if is_min:
         creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -43,6 +43,7 @@ def main_binary(is_min, selector, crosser, size_population, probability_mutation
     toolbox.register("evaluate", fitnessFunction)
     toolbox.register("select", selector, tournsize=3)
     toolbox.register("mate", crosser)
+    toolbox.register("mutate", mutator, indpb = probability_mutation)
 
     pop = toolbox.population(n=size_population)
     fitnesses = list(map(toolbox.evaluate, pop))
@@ -103,10 +104,11 @@ def main_binary(is_min, selector, crosser, size_population, probability_mutation
 is_min = True
 selector = tools.selTournament
 crosser = tools.cxOnePoint
-size_of_population = 100
-probability_mutation = 0.1
-probability_crossover = 0.3
+mutator = tools.mutShuffleIndexes
+size_of_population = 10
+probability_mutation = 0.3
+probability_crossover = 0.5
 number_iteration = 100
 number_elitism = 1
-main_binary(is_min,selector,crosser,size_of_population,probability_mutation,probability_crossover,number_iteration,number_elitism)
+main_binary(is_min,selector,crosser,mutator, size_of_population,probability_mutation,probability_crossover,number_iteration,number_elitism)
 print("Done!")
