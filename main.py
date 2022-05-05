@@ -27,13 +27,16 @@ def decodeInd(individual):
     return ind
 
 
-def main_binary(is_min, selector, crosser, size_population, probability_mutation, probability_crossover, number_iteration, number_elitism):
+def main_binary(is_min, selector, crosser, size_population, probability_mutation, probability_crossover,
+                number_iteration, number_elitism):
     if is_min:
         creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+        creator.create("Individual", list, fitness=creator.FitnessMin)
+
     else:
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+        creator.create("Individual", list, fitness=creator.FitnessMax)
 
-    creator.create("Individual", list, fitness=creator.FitnessMax)
     toolbox = base.Toolbox()
     toolbox.register('individual', individual, creator.Individual)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -96,3 +99,14 @@ def main_binary(is_min, selector, crosser, size_population, probability_mutation
     #
     print("-- End of (successful) evolution --")
 
+
+is_min = True
+selector = tools.selTournament
+crosser = tools.cxOnePoint
+size_of_population = 100
+probability_mutation = 0.1
+probability_crossover = 0.3
+number_iteration = 100
+number_elitism = 1
+main_binary(is_min,selector,crosser,size_of_population,probability_mutation,probability_crossover,number_iteration,number_elitism)
+print("Done!")
