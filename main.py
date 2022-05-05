@@ -15,7 +15,7 @@ def individual(icls):
 def fitnessFunction(individual):
     # tutaj rozkoduj binarnego osobnika! Napisz funkcje decodeInd
     ind = decodeInd(individual)
-    result = (ind[0] + 2 * ind[1] - 7) ** 2 + (2 * ind[0] + ind[1] - 5) ** 2
+    result = ((ind[0] + 2 * ind[1] - 7) ** 2 + (2 * ind[0] + ind[1] - 5) ** 2,)
     return result
 
 
