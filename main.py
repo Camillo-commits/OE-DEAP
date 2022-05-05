@@ -20,8 +20,11 @@ def fitnessFunction(individual):
 
 
 def decodeInd(individual):
-    # TODO
-    return list()
+    ind = list()
+    middle = len(individual) // 2
+    ind.append(int(''.join(str(i) for i in individual[:middle]), 2))
+    ind.append(int(''.join(str(i) for i in individual[middle:]), 2))
+    return ind
 
 
 def main_binary(is_min, selector, crosser, size_population, probability_mutation, probability_crossover, number_iteration, number_elitism):
@@ -92,3 +95,4 @@ def main_binary(is_min, selector, crosser, size_population, probability_mutation
                                              best_ind.fitness.values))
     #
     print("-- End of (successful) evolution --")
+
