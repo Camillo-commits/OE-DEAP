@@ -3,7 +3,7 @@ from deap import base
 from deap import creator
 from deap import tools
 from numpy import random
-from numpy.random import randint
+from random import randint
 
 
 def individual(icls):
@@ -108,7 +108,7 @@ mutator = tools.mutShuffleIndexes
 size_of_population = 10
 probability_mutation = 0.3
 probability_crossover = 0.5
-number_iteration = 100
+number_iteration = 10
 number_elitism = 1
 main_binary(is_min,selector,crosser,mutator, size_of_population,probability_mutation,probability_crossover,number_iteration,number_elitism)
 print("Done!")
