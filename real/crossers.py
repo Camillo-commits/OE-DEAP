@@ -1,5 +1,7 @@
 import random
 
+from real.fitness import get_fitness
+
 
 def blx_a_crosser(first, second):
     alfa = random.random()
@@ -54,3 +56,24 @@ def arithmetic_crosser(first, second):
     return new_first, new_second
 
 
+def linear_crosser(first, second):
+    z = []
+    v = []
+    w = []
+
+    for i in range(len(first)):
+        z.append(0.5 * (first[i] + second[i]))
+        v.append(1.5 * (first[i] - 0.5 * second[i]))
+        w.append(1.5 * (second[i] - 0.5 * first[i]))
+
+    z_fit = get_fitness(z)
+    v_fit = get_fitness(v)
+    w_fit = get_fitness(w)
+
+    minimal = min(min(z_fit, v_fit, w_fit))
+    if z_fit == minimal:
+        return v, w
+    elif v_fit == minimal:
+        return z, w
+    elif w_fit == minimal:
+        return z, v
