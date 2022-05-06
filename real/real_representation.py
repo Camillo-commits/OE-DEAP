@@ -26,17 +26,16 @@ def solve_real_representation(is_min, selector, crosser, mutator, size_populatio
         creator.create("Individual", list, fitness=creator.FitnessMin)
 
     else:
-        creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+        creator.create("FitnessMax", base.Fitness, weights=(-1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
     toolbox = base.Toolbox()
-    toolbox.register("attr_float", random.random)
-    toolbox.register('individual', individual, creator.Individual, toolbox.attr_float)
+    toolbox.register('individual', individual, creator.Individual)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("evaluate", fitnessFunction)
     toolbox.register("select", selector, tournsize=3)
-    toolbox.register("mate", crosser)
-    toolbox.register("mutate", mutator, indpb=probability_mutation)
+    toolbox.register("mate", crosser, alpha = 0.5)
+    toolbox.register("mutate", mutator, mu = 5, sigma=10, indpb=probability_mutation)
 
     pop = toolbox.population(n=size_population)
     fitnesses = list(map(toolbox.evaluate, pop))
