@@ -17,3 +17,14 @@ def plot3d(x1, x2, y, colorbar=True):
         cbar = plt.colorbar(img)
         cbar.set_label('Epoch')
     plt.show()
+
+def plotStdAvg(std, avg):
+    c = range(1, len(std)+1)
+
+    plt.scatter(c, std)
+    plt.scatter(c, avg)
+
+    plt.legend(["Std", "Avg"])
+    plt.xlabel("Epoch")
+
+    plt.show()

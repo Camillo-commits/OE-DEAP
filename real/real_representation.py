@@ -45,6 +45,8 @@ def solve_real_representation(is_min, selector, crosser, mutator, size_populatio
     x1_list = []
     x2_list = []
     y_list = []
+    std_list = []
+    avg_list = []
     g = 0
     while g < number_iteration:
         g = g + 1
@@ -95,8 +97,9 @@ def solve_real_representation(is_min, selector, crosser, mutator, size_populatio
         x1_list.append(best_ind[0])
         x2_list.append(best_ind[1])
         y_list.append(best_ind.fitness.values[0])
-
+        std_list.append(std)
+        avg_list.append(mean)
     #
     print("-- End of (successful) evolution --")
-    return x1_list, x2_list, y_list
+    return x1_list, x2_list, y_list, std_list, avg_list
 
