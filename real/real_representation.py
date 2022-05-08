@@ -42,6 +42,9 @@ def solve_real_representation(is_min, selector, crosser, mutator, size_populatio
     for ind, fit in zip(pop, fitnesses):
         ind.fitness.values = fit
 
+    x1_list = []
+    x2_list = []
+    y_list = []
     g = 0
     while g < number_iteration:
         g = g + 1
@@ -89,5 +92,11 @@ def solve_real_representation(is_min, selector, crosser, mutator, size_populatio
         best_ind = tools.selBest(pop, 1)[0]
         print("Best individual is %s, %s" % (best_ind,
                                              best_ind.fitness.values))
+        x1_list.append(best_ind[0])
+        x2_list.append(best_ind[1])
+        y_list.append(best_ind.fitness.values[0])
+
     #
     print("-- End of (successful) evolution --")
+    return x1_list, x2_list, y_list
+
