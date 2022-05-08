@@ -2,7 +2,8 @@ from deap import base
 from deap import creator
 from deap import tools
 from numpy import random
-from random import randint
+
+from real.fitness import get_fitness
 
 
 def individual(icls):
@@ -11,11 +12,6 @@ def individual(icls):
     genome.append(random.uniform(-10, 10))
 
     return icls(genome)
-
-
-def fitnessFunction(individual):
-    result = ((individual[0] + 2 * individual[1] - 7) ** 2 + (2 * individual[0] + individual[1] - 5) ** 2,)
-    return result
 
 
 def solve_real_representation(is_min, selector, crosser, mutator, size_population, probability_mutation,
@@ -32,7 +28,7 @@ def solve_real_representation(is_min, selector, crosser, mutator, size_populatio
     toolbox = base.Toolbox()
     toolbox.register('individual', individual, creator.Individual)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-    toolbox.register("evaluate", fitnessFunction)
+    toolbox.register("evaluate", get_fitness)
     toolbox.register("select", selector, tournsize=3)
     toolbox.register("mate", crosser, alpha = 0.5)
     toolbox.register("mutate", mutator, mu = 5, sigma=10, indpb=probability_mutation)

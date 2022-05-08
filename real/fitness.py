@@ -1,6 +1,3 @@
-def get_fitness(entity):
-    result = 0
-    for i in range(len(entity)):
-        result = result + entity[i]
-
+def get_fitness(individual):
+    result = ((individual[0] + 2 * individual[1] - 7) ** 2 + (2 * individual[0] + individual[1] - 5) ** 2,)
     return result
