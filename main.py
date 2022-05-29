@@ -1,7 +1,8 @@
 import numpy
 from deap import tools
 
-from SVC.functionallity import solve
+from SVC.functionallity import solve, mutationSVC, mutationSVCWithSelection, SVCParametersFitness, \
+    SVCParametersFeatureFitness, SVCparameters, SVCParametersFeatures
 from binary.binary_representation import solve_binary_representation
 from real.real_representation import solve_real_representation
 import matplotlib.pyplot as plt
@@ -54,7 +55,12 @@ number_elitism = 1
 
 
 
-x1, x2, y, std, avg = solve(is_min, selector, crosser, mutator, size_of_population,
+x1, x2, y, std, avg = solve(is_min, selector, crosser, mutationSVC, size_of_population,
                                                 probability_mutation,
-                                                probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df)
+                                                probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df, SVCParametersFitness, SVCparameters)
+print("Done!")
+
+x1, x2, y, std, avg = solve(is_min, selector, crosser, mutationSVCWithSelection, size_of_population,
+                                                probability_mutation,
+                                                probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df, SVCParametersFeatureFitness, SVCParametersFeatures)
 print("Done!")
