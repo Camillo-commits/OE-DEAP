@@ -3,7 +3,7 @@ import random
 from deap import base
 from deap import creator
 from deap import tools
-from deap.benchmarks import tools
+#from deap.benchmarks import tools
 from sklearn import metrics
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import MinMaxScaler
@@ -22,7 +22,7 @@ def SVCparameters(numberOfFeatures, icls):
     genome.append(k)
 
     # degree
-    genome.append(random.int(0.1, 5))
+    genome.append(random.uniform(0.1, 5))
 
     # gamma
     gamma = random.uniform(0.001, 5)
@@ -40,6 +40,8 @@ def SVCParametersFitness(y, df, numberOfAtr, individual):
     cv = StratifiedKFold(n_splits=split)
     mms = MinMaxScaler()
     df_norm = mms.fit_transform(df)
+    if individual[2] < 0:
+        individual[2] = 0.1
     estimator = SVC(kernel=individual[0], C=individual[1], degree=individual[2], gamma=individual[3],
                     coef0=individual[4], random_state=101)
     resultSum = 0
@@ -50,7 +52,7 @@ def SVCParametersFitness(y, df, numberOfAtr, individual):
         tn, fp, fn, tp = metrics.confusion_matrix(expected, predicted).ravel()
         result = (tp + tn) / (tp + fp + tn + fn)
         resultSum = resultSum + result
-    return resultSum / split
+    return resultSum / split,
 
 
 def mutationSVC(individual):
@@ -78,7 +80,7 @@ def mutationSVC(individual):
 
 def solve(is_min, selector, crosser, mutator, size_population, probability_mutation,
           probability_crossover,
-          number_iteration, number_elitism):
+          number_iteration, number_elitism, numberOfAttr, y, df):
     if is_min:
         creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMin)
@@ -88,12 +90,12 @@ def solve(is_min, selector, crosser, mutator, size_population, probability_mutat
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
     toolbox = base.Toolbox()
-    toolbox.register('individual', SVCparameters, creator.Individual)
+    toolbox.register('individual', SVCparameters, numberOfAttr, creator.Individual)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-    toolbox.register("evaluate", SVCParametersFitness)
+    toolbox.register("evaluate", SVCParametersFitness, y, df, numberOfAttr)
     toolbox.register("select", selector, tournsize=3)
     toolbox.register("mate", crosser, alpha=0.5)
-    toolbox.register("mutate", mutator, mu=5, sigma=10, indpb=probability_mutation)
+    toolbox.register("mutate", mutationSVC)#, mu=5, sigma=10, indpb=probability_mutation)
 
     pop = toolbox.population(n=size_population)
     fitnesses = list(map(toolbox.evaluate, pop))

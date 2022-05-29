@@ -1,5 +1,7 @@
 import numpy
 from deap import tools
+
+from SVC.functionallity import solve
 from binary.binary_representation import solve_binary_representation
 from real.real_representation import solve_real_representation
 import matplotlib.pyplot as plt
@@ -24,21 +26,21 @@ scores = model_selection.cross_val_score(clf, df_norm, y,
                                          cv=5, scoring='accuracy', n_jobs=-1)
 print('Our model accuracy: ', scores.mean())
 
-is_min = True
-selector = tools.selTournament
-crosser = tools.cxOnePoint
-mutator = tools.mutShuffleIndexes
-size_of_population = 10
-probability_mutation = 0.3
-probability_crossover = 0.5
-number_iteration = 100
-number_elitism = 1
-x1, x2, y, std, avg = solve_binary_representation(is_min, selector, crosser, mutator, size_of_population,
-                                                  probability_mutation, probability_crossover,
-                                                  number_iteration, number_elitism)
-print("Done!")
-plot3d(x1, x2, y, colorbar=True)
-plotStdAvg(std, avg)
+#is_min = True
+#selector = tools.selTournament
+#crosser = tools.cxOnePoint
+#mutator = tools.mutShuffleIndexes
+#size_of_population = 10
+#probability_mutation = 0.3
+#probability_crossover = 0.5
+#number_iteration = 100
+#number_elitism = 1
+#x1, x2, y, std, avg = solve_binary_representation(is_min, selector, crosser, mutator, size_of_population,
+#                                                  probability_mutation, probability_crossover,
+#                                                  number_iteration, number_elitism)
+#print("Done!")
+#plot3d(x1, x2, y, colorbar=True)
+#plotStdAvg(std, avg)
 
 is_min = True
 selector = tools.selTournament
@@ -46,12 +48,13 @@ crosser = tools.cxBlend
 mutator = tools.mutGaussian
 size_of_population = 10
 probability_mutation = 0.3
-probability_crossover = 0.5
+probability_crossover = 0
 number_iteration = 100
 number_elitism = 1
-x1, x2, y, std, avg = solve_real_representation(is_min, selector, crosser, mutator, size_of_population,
+
+
+
+x1, x2, y, std, avg = solve(is_min, selector, crosser, mutator, size_of_population,
                                                 probability_mutation,
-                                                probability_crossover, number_iteration, number_elitism)
+                                                probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df)
 print("Done!")
-plot3d(x1, x2, y, colorbar=True)
-plotStdAvg(std, avg)
