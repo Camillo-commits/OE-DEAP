@@ -8,15 +8,19 @@ from sklearn import metrics
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 
+__kernel__ = "rbf"
 
 def SVCparameters(numberOfFeatures, icls):
     genome = list()
 
     # kernel
-    listKernel = ["linear", "rbf", "poly", "sigmoid"]
-    genome.append(listKernel[random.randint(0, 3)])
-
+    if __kernel__ is None:
+        listKernel = ["linear", "rbf", "poly", "sigmoid"]
+        genome.append(listKernel[random.randint(0, 3)])
+    else:
+        genome.append(__kernel__)
     # c
     k = random.uniform(0.1, 100)
     genome.append(k)
@@ -59,8 +63,11 @@ def mutationSVC(individual):
     numberParamer = random.randint(0, len(individual) - 1)
     if numberParamer == 0:
         # kernel
-        listKernel = ["linear", "rbf", "poly", "sigmoid"]
-        individual[0] = listKernel[random.randint(0, 3)]
+        if __kernel__ is None:
+            listKernel = ["linear", "rbf", "poly", "sigmoid"]
+            individual[0] = listKernel[random.randint(0, 3)]
+        else:
+            individual[0] = __kernel__
     elif numberParamer == 1:
         # C
         k = random.uniform(0.1, 100)
@@ -82,8 +89,11 @@ def mutationSVC(individual):
 def SVCParametersFeatures(numberFeatures, icls):
     genome = list()
     # kernel
-    listKernel = ["linear", "rbf", "poly", "sigmoid"]
-    genome.append(listKernel[random.randint(0, 3)])
+    if __kernel__ is None:
+        listKernel = ["linear", "rbf", "poly", "sigmoid"]
+        genome.append(listKernel[random.randint(0, 3)])
+    else:
+        genome.append(__kernel__)
     # c
     k = random.uniform(0.1, 100)
     genome.append(k)
@@ -113,8 +123,8 @@ def SVCParametersFeatureFitness(y, df, numberOfAtributtes, individual):
 
     mms = MinMaxScaler()
     df_norm = mms.fit_transform(dfSelectedFeatures)
-    estimator = SVC(kernel=individual[0], C=individual[1],degree=individual[2],gamma=individual[3],
-                    coef0=individual[4],random_state=101)
+    estimator = SVC(kernel=individual[0], C=individual[1], degree=individual[2], gamma=individual[3],
+                    coef0=individual[4], random_state=101)
     resultSum = 0
     for train, test in cv.split(df_norm, y):
         estimator.fit(df_norm[train], y[train])
@@ -130,8 +140,11 @@ def mutationSVCWithSelection(individual):
     numberParamer = random.randint(0, len(individual) - 1)
     if numberParamer == 0:
         # kernel
-        listKernel = ["linear", "rbf", "poly", "sigmoid"]
-        individual[0] = listKernel[random.randint(0, 3)]
+        if __kernel__ is None:
+            listKernel = ["linear", "rbf", "poly", "sigmoid"]
+            individual[0] = listKernel[random.randint(0, 3)]
+        else:
+            individual[0] = __kernel__
     elif numberParamer == 1:
         # C
         k = random.uniform(0.1, 100)
@@ -153,6 +166,7 @@ def mutationSVCWithSelection(individual):
         else:
             individual[numberParamer] = 0
 
+
 #############
 
 
@@ -164,7 +178,7 @@ def solve(is_min, selector, crosser, mutator, size_population, probability_mutat
         creator.create("Individual", list, fitness=creator.FitnessMin)
 
     else:
-        creator.create("FitnessMax", base.Fitness, weights=(-1.0,))
+        creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
     toolbox = base.Toolbox()
