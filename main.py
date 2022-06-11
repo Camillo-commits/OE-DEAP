@@ -1,9 +1,12 @@
 import numpy
+import numpy as np
 from deap import tools
+from mealpy.swarm_based.SSO import BaseSSO
 
 from SVC.functionallity import solve, mutationSVC, mutationSVCWithSelection, SVCParametersFitness, \
-    SVCParametersFeatureFitness, SVCparameters, SVCParametersFeatures
+    SVCParametersFeatureFitness, SVCparameters, SVCParametersFeatures, __kernel__
 from binary.binary_representation import solve_binary_representation
+from real.fitness import get_fitness, get_fitness2
 from real.real_representation import solve_real_representation
 import matplotlib.pyplot as plt
 from utils import plot3d, plotStdAvg
@@ -52,15 +55,40 @@ probability_mutation = 0.3
 probability_crossover = 0
 number_iteration = 100
 number_elitism = 1
+#listKernel = ["linear", "rbf", "poly", "sigmoid"]
+
+# __kernel__ = "abc"
+# x1, x2, y, std, avg = solve(is_min, selector, crosser, mutationSVC, size_of_population,
+#                                                 probability_mutation,
+#                                                 probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df, SVCParametersFitness, SVCparameters, "linear")
+# print("Done!")
+#
+# x1, x2, y, std, avg = solve(is_min, selector, crosser, mutationSVCWithSelection, size_of_population,
+#                                                 probability_mutation,
+#                                                 probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df, SVCParametersFeatureFitness, SVCParametersFeatures, "abc")
+# print("Done!")
+#
 
 
+problem_dict1 = {
 
-x1, x2, y, std, avg = solve(is_min, selector, crosser, mutationSVC, size_of_population,
-                                                probability_mutation,
-                                                probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df, SVCParametersFitness, SVCparameters)
-print("Done!")
+    "fit_func": get_fitness2,
 
-x1, x2, y, std, avg = solve(is_min, selector, crosser, mutationSVCWithSelection, size_of_population,
-                                                probability_mutation,
-                                                probability_crossover, number_iteration, number_elitism, numberOfAttributes, y, df, SVCParametersFeatureFitness, SVCParametersFeatures)
-print("Done!")
+    "lb": [-10],
+
+    "ub": [10],
+
+    "minmax": "min",
+
+    "n_dims": 3,
+}
+
+epoch = 1000
+
+pop_size = 50
+
+model = BaseSSO(problem_dict1, epoch, pop_size)
+
+best_position, best_fitness = model.solve()
+
+print(f"Solution: {best_position}, Fitness: {best_fitness}")
